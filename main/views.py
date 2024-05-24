@@ -5,7 +5,8 @@ from .models import Cake
 from .forms import CakeForm  # Создайте форму для модели Cake
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
-from .forms import ClientRegistrationForm, ChiefRegistrationForm, ClientProfileForm, ChiefProfileForm
+from .forms import PersonRegistrationForm, ChiefRegistrationForm, ClientProfileForm, ChiefProfileForm
+from django.views import View
 # Create your views here.
 
 
@@ -21,22 +22,17 @@ def home(request):
 # views.py
 
 
-def register_client(request):
-    if request.method == 'POST':
-        user_form = ClientRegistrationForm(request.POST)
-        profile_form = ClientProfileForm(request.POST)
-        if user_form.is_valid() and profile_form.is_valid():
-            user = user_form.save()
-            profile = profile_form.save(commit=False)
-            profile.user = user
-            profile.save()
-            new_user = authenticate(username=user.username, password=user_form.cleaned_data['password'])
-            login(request, new_user)
+class Register(View):
+    def get(self, request):
+        form = PersonRegistrationForm()
+        return render(request, 'registration/register.html', {'form': form})
+
+    def post(self, request):
+        form = PersonRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
             return redirect(home)
-    else:
-        user_form = ClientRegistrationForm()
-        profile_form = ClientProfileForm()
-    return render(request, 'main/registration/register.html', {'user_form': user_form, 'profile_form': profile_form})
+        return render(request, 'registration/register.html', {'form': form})
 
 
 def register_chief(request):
@@ -48,7 +44,7 @@ def register_chief(request):
             return redirect(home)
     else:
         form = ChiefRegistrationForm()
-    return render(request, 'main/registration/register_chief.html', {'form': form})
+    return render(request, 'registration/register_chief.html', {'form': form})
 
 
 @login_required
