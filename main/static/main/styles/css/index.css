@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #000;
+}
+h1{
+    font-family: 'Cinzel Decorative', sans-serif;
+}
+h3{
+    font-style: italic;
+    font-size: 14px;
+}
+header nav ul {
+    font-family: 'Jost', sans-serif;
+    display: flex;
+    justify-content: flex-end;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+header nav ul li {
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+}
+
+.bestsellers {
+    margin: 20px;
+}
+
+.cake-list {
+    display: flex;
+    justify-content: space-around;
+}
+
+.cake-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 200px;
+    text-align: center;
+}
+
+.cake-item img {
+    max-width: 100%;
+    height: auto;
+}
+
+.tags {
+    margin-top: 10px;
+}
+
+.tag {
+    display: inline-block;
+    background: #f0f0f0;
+    padding: 5px;
+    margin: 2px;
+    border-radius: 3px;
+}

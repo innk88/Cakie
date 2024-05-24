@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAKES</title>
+    <link rel="stylesheet" href="{% static "main/styles/css/index.css" %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li>Изделия</li>
+                <li>Кондитеры</li>
+                <li>Заказы</li>
+                <li>Войти</li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="hero">
+            <!-- Main image placeholder -->
+        </section>
+        <section class="bestsellers">
+            <h2>Бестселлеры</h2>
+            <div class="product">
+                <div class="product-image"></div>
+                <div class="product-tags">
+                    <span>#кремчиз</span>
+                    <span>#праздничный</span>
+                    <span>#детский</span>
+                </div>
+                <div class="product-details">
+                    <span>Морковный</span>
+                    <span>@stolyarchik</span>
+                    <span>2000руб/кг</span>
+                </div>
+            </div>
+            <div class="product">
+                <div class="product-image"></div>
+                <!-- Additional products can be added here -->
+            </div>
+        </section>
+    </main>
+</body>
+</html>

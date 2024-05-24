@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+    <link rel="stylesheet" href="{% static 'main/styles/css/index.css' %}">
+</head>
+<body>
+    <header>
+        <h1>CAKES</h1>
+        <nav>
+            <ul>
+                 {% if user.is_authenticated %}
+                    {% if user.chief %}
+                        <li><a href="{% url 'add_cake' %}">Добавить Торт</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'logout' %}">Выйти</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Войти</a></li>
+                    <li><a href="{% url 'register' %}">Регистрация</a></li>
+                    <li><a href="{% url 'register_chief' %}">Регистрация Кондитера</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="bestsellers">
+            <h2>Бестселлеры</h2>
+            <div class="cake-list">
+                {% for cake in popular_cakes %}
+                <div class="cake-item">
+                    <img src="{{ cake.image.url }}" alt="{{ cake.name }}">
+                    <h3>{{ cake.name }}</h3>
+                    <p>{{ cake.description }}</p>
+                    <p>{{ cake.price }} руб/кг</p>
+                    <p>@{{ cake.chief.username }}</p>
+                    <div class="tags">
+                        {% for tag in cake.tags.all %}
+                        <span class="tag">#{{ tag.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+</body>
+</html>

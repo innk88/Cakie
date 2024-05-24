@@ -1,0 +1,80 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #000;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+}
+
+.logo img {
+    height: 50px;
+}
+
+.menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: flex-end;
+    flex-grow: 1;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.menu li {
+    margin-left: 20px;
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: block;
+}
+
+.menu a:hover {
+    background-color: #575757;
+    border-radius: 5px;
+}
+.bestsellers {
+    margin: 20px;
+}
+
+.cake-list {
+    display: flex;
+    justify-content: space-around;
+}
+
+.cake-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 200px;
+    text-align: center;
+}
+
+.cake-item img {
+    max-width: 100%;
+    height: auto;
+}
+
+.tags {
+    margin-top: 10px;
+}
+
+.tag {
+    display: inline-block;
+    background: #f0f0f0;
+    padding: 5px;
+    margin: 2px;
+    border-radius: 3px;
+}
