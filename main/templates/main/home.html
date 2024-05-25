@@ -13,8 +13,8 @@
         <nav>
             <ul>
                   {% if user.is_authenticated %}
-                    <li><a href="{% url 'profile' %}">Profile</a></li>
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                    <li><a href="{% url 'profile' %}">Профиль</a></li>
+                    <li><a href="{% url 'logout' %}">Выйти</a></li>
                 {% else %}
                     <li><a href="{% url 'login' %}">Войти</a></li>
                     <li><a href="{% url 'register' %}">Регистрация</a></li>

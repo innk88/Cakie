@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Chief, Cake, Person
+from .models import Chief, Cake, Person, Order
 
 
 class PersonRegistrationForm(UserCreationForm):
@@ -27,3 +27,12 @@ class CakeForm(forms.ModelForm):
     class Meta:
         model = Cake
         fields = ['name', 'filling', 'price', 'weight', 'description', 'image', 'tags']
+
+
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['count', 'description', 'design', 'due_date', 'image', 'chief', 'product']
+        widgets = {
+            'due_date': forms.DateInput(attrs={'type': 'date'}),
+        }

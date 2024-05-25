@@ -2,13 +2,14 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .models import Cake
-from .forms import CakeForm  # Создайте форму для модели Cake
+from .forms import CakeForm, OrderForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from .forms import PersonRegistrationForm, ChiefRegistrationForm
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.models import Group
+from .decorators import check_user_permission
 from django.contrib.auth.decorators import permission_required
 # Create your views here.
 
@@ -60,7 +61,7 @@ def profile(request):
     return render(request, 'main/profile.html')
 
 
-@method_decorator(permission_required('main.can_add_cake'), name='dispatch')
+@check_user_permission('main.can_add_cake')
 class AddCakeView(View):
     def get(self, request):
         form = CakeForm()
@@ -72,3 +73,21 @@ class AddCakeView(View):
             form.save()
             return redirect('profile')
         return render(request, 'main/add_cake.html', {'form': form})
+
+
+
+@method_decorator(login_required, name='dispatch')
+class AddOrderView(View):
+    def get(self, request):
+        form = OrderForm()
+        return render(request, 'main/add_order.html', {'form': form})
+
+    def post(self, request):
+        form = OrderForm(request.POST, request.FILES)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.client = request.user
+            order.save()
+            form.save_m2m()
+            return redirect('profile')
+        return render(request, 'main/add_order.html', {'form': form})

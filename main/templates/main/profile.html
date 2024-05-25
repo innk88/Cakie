@@ -1,12 +1,19 @@
+<!-- myapp/templates/profile.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Profile</title>
+    <title>Профиль</title>
 </head>
 <body>
-    <h1>Welcome to your Profile</h1>
-    {% if perms.myapp.can_add_cake %}
-        <a href="{% url 'add_cake' %}">Add Cake</a>
+    <a href="{% url 'add_order' %}">Добавить заказ</a>
+    {% if perms.main.can_add_cake %}
+        <a href="{% url 'add_cake' %}">Добавить торт</a>
+        <h2>Ваши торты</h2>
+        <ul>
+            {% for cake in user.cakes.all %}
+                <li>{{ cake.name }} - {{ cake.filling }}</li>
+            {% endfor %}
+        </ul>
     {% endif %}
 </body>
 </html>

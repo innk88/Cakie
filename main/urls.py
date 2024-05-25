@@ -1,6 +1,6 @@
 from django.urls import path
 from main.views import home
-from .views import Register, ChiefRegisterView, AddCakeView, profile
+from .views import Register, ChiefRegisterView, AddCakeView, profile, AddOrderView
 from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('', home, name='home'),
@@ -9,5 +9,6 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), {'next_page': 'home'}, name='logout'),
     path('profile/', profile, name='profile'),
-    path('add_cake/', AddCakeView.as_view(), name='add_cake'),
+    path('add_cake/', AddCakeView, name='add_cake'),
+    path('add_order/', AddOrderView.as_view(), name='add_order'),
 ]
