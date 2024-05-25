@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile</title>
+</head>
+<body>
+    <h1>Welcome to your Profile</h1>
+    {% if perms.myapp.can_add_cake %}
+        <a href="{% url 'add_cake' %}">Add Cake</a>
+    {% endif %}
+</body>
+</html>

@@ -24,8 +24,9 @@ class Person(User):
     number = models.CharField("Номер телефона", max_length=20)
 
     class Meta:
-        verbose_name = "Client"
+        verbose_name = "Сlient"
         verbose_name_plural = "Clients"
+
 
 
 class Chief(Person):
@@ -34,7 +35,9 @@ class Chief(Person):
     class Meta:
         verbose_name = "Chief"
         verbose_name_plural = "Chiefs"
-
+        permissions = [
+            ("can_add_cake", "Can add cake"),
+        ]
 
 class Order(models.Model):
     count = models.PositiveIntegerField("Количество")
