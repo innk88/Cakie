@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 
 # Create your models here.
 
@@ -13,6 +14,9 @@ class Cake(models.Model):
     image = models.ImageField("Изображение", upload_to='static/main/media/cakes/', blank=True, null=True)
     tags = models.ManyToManyField('Tag', verbose_name="Теги", related_name="cakes")
     order_count = models.PositiveIntegerField("Количество заказов", default=0)
+
+    def __str__(self):
+        return self.name
 
 
 class Person(User):

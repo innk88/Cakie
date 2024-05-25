@@ -13,9 +13,9 @@
         <nav>
             <ul>
                  {% if user.is_authenticated %}
-                    {% if user.chief %}
-                        <li><a href="{% url 'add_cake' %}">Добавить Торт</a></li>
-                    {% endif %}
+                      {% if is_chief_user %}
+                        <li><a href="{% url 'add_cake' %}">Add Cake</a></li>
+                      {% endif %}
                     <li><a href="{% url 'logout' %}">Выйти</a></li>
                 {% else %}
                     <li><a href="{% url 'login' %}">Войти</a></li>

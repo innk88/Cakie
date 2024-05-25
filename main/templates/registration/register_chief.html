@@ -1,15 +1,13 @@
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Регистрация Кондитера</title>
+    <title>Register Chief</title>
 </head>
 <body>
-    <h2>Регистрация Кондитера</h2>
+    <h2>Register Chief</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Зарегистрироваться</button>
+        <button type="submit">Register</button>
     </form>
 </body>
 </html>

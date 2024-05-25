@@ -5,8 +5,10 @@ from .models import Cake
 from .forms import CakeForm  # Создайте форму для модели Cake
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
-from .forms import PersonRegistrationForm, ChiefRegistrationForm, ClientProfileForm, ChiefProfileForm
+from .forms import PersonRegistrationForm, ChiefRegistrationForm
 from django.views import View
+from django.utils.decorators import method_decorator
+from django.contrib.auth.models import Group
 # Create your views here.
 
 
@@ -35,29 +37,34 @@ class Register(View):
         return render(request, 'registration/register.html', {'form': form})
 
 
-def register_chief(request):
-    if request.method == 'POST':
+class ChiefRegisterView(View):
+    def get(self, request):
+        form = ChiefRegistrationForm()
+        return render(request, 'registration/register_chief.html', {'form': form})
+
+    def post(self, request):
         form = ChiefRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect(home)
-    else:
-        form = ChiefRegistrationForm()
-    return render(request, 'registration/register_chief.html', {'form': form})
+            chief = form.save(commit=False)
+            chief.save()
+            form.save_m2m()
+            chief_group = Group.objects.get(name='Chiefs')
+            chief.groups.add(chief_group)
+            return redirect('login')
+        return render(request, 'registration/register_chief.html', {'form': form})
 
 
-@login_required
-def add_cake(request):
-    if not hasattr(request.user, 'chief'):
-        return redirect(home)
+@method_decorator(login_required, name='dispatch')
+class AddCakeView(View):
+    def get(self, request):
+        form = CakeForm()
+        return render(request, 'main/add_cake.html', {'form': form})
 
-    if request.method == 'POST':
+    def post(self, request):
         form = CakeForm(request.POST, request.FILES)
         if form.is_valid():
             cake = form.save(commit=False)
             cake.save()
+            form.save_m2m()
             return redirect('home')
-    else:
-        form = CakeForm()
-    return render(request, 'main/add_cake.html', {'form': form})
+        return render(request, 'main/add_cake.html', {'form': form})
