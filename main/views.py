@@ -9,7 +9,7 @@ from .forms import PersonRegistrationForm, ChiefRegistrationForm
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.models import Group
-from .decorators import check_user_permission
+from .decorators import check_user_permission, get_real_user, check_if_chief
 from django.contrib.auth.decorators import permission_required
 # Create your views here.
 
@@ -57,11 +57,13 @@ class ChiefRegisterView(View):
 
 
 @login_required
+@get_real_user
+@check_if_chief
 def profile(request):
-    return render(request, 'main/profile.html')
+    return render(request, 'main/profile.html', {'is_chief': request.is_chief})
 
 
-@check_user_permission('main.can_add_cake')
+@method_decorator([login_required, check_if_chief], name='dispatch')
 class AddCakeView(View):
     def get(self, request):
         form = CakeForm()
@@ -76,7 +78,8 @@ class AddCakeView(View):
 
 
 
-@method_decorator(login_required, name='dispatch')
+
+@method_decorator([login_required, get_real_user], name='dispatch')
 class AddOrderView(View):
     def get(self, request):
         form = OrderForm()
@@ -86,7 +89,7 @@ class AddOrderView(View):
         form = OrderForm(request.POST, request.FILES)
         if form.is_valid():
             order = form.save(commit=False)
-            order.client = request.user
+            order.client = request.real_user
             order.save()
             form.save_m2m()
             return redirect('profile')

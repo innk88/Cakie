@@ -34,7 +34,7 @@ class Cake(models.Model):
     image = models.ImageField("Изображение", upload_to='static/main/media/cakes/', blank=True, null=True)
     tags = models.ManyToManyField('Tag', verbose_name="Теги", related_name="cakes")
     order_count = models.PositiveIntegerField("Количество заказов", default=0)
-    #chief = models.ForeignKey(Chief, verbose_name="Кондитер", related_name="cakes", on_delete=models.CASCADE, null=True, default=25)
+    chief = models.ForeignKey(Chief, verbose_name="Кондитер", related_name="cakes", on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name

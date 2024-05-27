@@ -6,7 +6,7 @@
 </head>
 <body>
     <a href="{% url 'add_order' %}">Добавить заказ</a>
-    {% if perms.main.can_add_cake %}
+     {% if is_chief %}
         <a href="{% url 'add_cake' %}">Добавить торт</a>
         <h2>Ваши торты</h2>
         <ul>

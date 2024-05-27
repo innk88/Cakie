@@ -9,6 +9,6 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), {'next_page': 'home'}, name='logout'),
     path('profile/', profile, name='profile'),
-    path('add_cake/', AddCakeView, name='add_cake'),
+    path('add_cake/', AddCakeView.as_view(), name='add_cake'),
     path('add_order/', AddOrderView.as_view(), name='add_order'),
 ]
