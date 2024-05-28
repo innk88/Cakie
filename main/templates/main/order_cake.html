@@ -1,0 +1,67 @@
+<!-- myapp/templates/main/order_cake.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Cake</title>
+    <style>
+        .cake-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            display: inline-block;
+            width: 200px;
+            vertical-align: top;
+        }
+        .cake-item img {
+            max-width: 100%;
+            height: auto;
+        }
+        .tags .tag {
+            background-color: #eee;
+            border-radius: 3px;
+            padding: 2px 5px;
+            margin: 2px;
+            display: inline-block;
+        }
+        .buttons {
+            margin-top: 10px;
+        }
+        .buttons a, .buttons button {
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #000;
+            background-color: #000;
+            color: #fff;
+            margin-right: 5px;
+            display: inline-block;
+            border-radius: 3px;
+        }
+        .buttons a:hover, .buttons button:hover {
+            background-color: #333;
+            border-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h2>Order Cake</h2>
+    <div class="cake-item">
+        <img src="{{ cake.image.url }}" alt="{{ cake.name }}">
+        <h3>{{ cake.name }}</h3>
+        <p>{{ cake.description }}</p>
+        <p>{{ cake.price }} руб - вес {{ cake.weight }} кг</p>
+        <p>@{{ cake.chief.username }}</p>
+        <div class="tags">
+            {% for tag in cake.tags.all %}
+            <span class="tag">#{{ tag.name }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="buttons">
+            <button type="submit">Order</button>
+        </div>
+    </form>
+</body>
+</html>

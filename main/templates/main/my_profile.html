@@ -1,0 +1,62 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+     {% if is_chief %}
+        <a href="{% url 'add_cake' %}">Добавить торт</a>
+         <p><strong>Лого:</strong></p>
+            <img src="{{ chief.logo.url }}" alt="{{ chief.username }} лого">
+         <p><strong>Имя:</strong> {{ chief.username }}</p>
+        <p><strong>Email:</strong> {{ chief.email }}</p>
+        <p><strong>Адрес:</strong> {{ chief.address }}</p>
+        <p><strong>Номер телефона:</strong> {{ chief.number }}</p>
+        <h2>Ваши торты</h2>
+            <div class="items-list">
+            {% for cake in cakes %}
+            <div class="item">
+                <img src="{{ cake.image.url }}" alt="{{ cake.name }}">
+                <h3>{{ cake.name }}</h3>
+                <p>{{ cake.description }}</p>
+                <p>{{ cake.price }} руб</p>
+                <p>Заказы:: {{ cake.order_count }}</p>
+                <div class="tags">
+                    {% for tag in cake.tags.all %}
+                    <span class="tag">#{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+                <h2>Ваши заказы</h2>
+        <div class="items-list">
+            {% for order in orders %}
+            <div class="item">
+                <h3>{{ order.product.name }}</h3>
+                <p>{{ order.description }}</p>
+                <p>Дизайн: {{ order.design }}</p>
+                <p>Срок заказа: {{ order.due_date }}</p>
+                <p>Клиент: <a href="{% url 'user_profile' order.client.id %}">{{ order.client.username }}</a></p>
+            </div>
+            {% endfor %}
+        </div>
+            {% endfor %}
+        </div>
+    {% else %}
+         <a href="{% url 'add_order' %}">Добавить заказ</a>
+         <p><strong>Имя:</strong> {{ client.username }}</p>
+        <p><strong>Email:</strong> {{ client.email }}</p>
+        <p><strong>Адрес:</strong> {{ client.address }}</p>
+        <p><strong>Номер телефона:</strong> {{ client.number }}</p>
+        <h2>Ваши заказы</h2>
+        <div class="items-list">
+            {% for order in orders %}
+            <div class="item">
+                <h3>{{ order.product.name }}</h3>
+                <p>{{ order.description }}</p>
+                <p>Дизайн: {{ order.design }}</p>
+                <p>Срок заказа: {{ order.due_date }}</p>
+                <p>Кондитер: <a href="{% url 'user_profile' order.chief.id %}">{{ order.chief.username }}</a></p>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock content %}

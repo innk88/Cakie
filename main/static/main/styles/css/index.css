@@ -1,72 +1,101 @@
-@import url('https://fonts.googleapis.com/css2?family=Jost:wght@400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');
-body {
-    font-family: 'Roboto', sans-serif;
-}
+/* styles.css */
 
-header {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid #000;
-}
-h1{
-    font-family: 'Cinzel Decorative', sans-serif;
-}
-h3{
-    font-style: italic;
-    font-size: 14px;
-}
-header nav ul {
-    font-family: 'Jost', sans-serif;
-    display: flex;
-    justify-content: flex-end;
-    list-style: none;
+body {
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
 }
 
+header {
+    background: #f8f8f8;
+    border-bottom: 1px solid #e7e7e7;
+    padding: 10px 0;
+    text-align: center;
+}
+
+header nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
 header nav ul li {
-    margin-right: 20px;
-    cursor: pointer;
+    display: inline;
+    margin: 0 15px;
 }
 
-.navbar {
+header nav ul li a {
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+.cakes-list {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #333;
-}
-
-.bestsellers {
-    margin: 20px;
-}
-
-.cake-list {
-    display: flex;
-    justify-content: space-around;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px 0;
 }
 
 .cake-item {
     border: 1px solid #ccc;
     padding: 10px;
-    width: 200px;
+    margin: 10px;
+    width: 400px;
     text-align: center;
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
 }
 
 .cake-item img {
     max-width: 100%;
     height: auto;
+    background: #D9534F; /* Placeholder background color */
 }
 
-.tags {
+.cake-item h3 {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.cake-item p {
+    margin: 5px 0;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.cake-item .tags {
+    margin: 10px 0;
+}
+
+.cake-item .tags .tag {
+    background-color: #eee;
+    border-radius: 3px;
+    padding: 2px 5px;
+    margin: 2px;
+    display: inline-block;
+}
+
+.buttons {
     margin-top: 10px;
 }
 
-.tag {
+.buttons a, .buttons button {
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid #000;
+    background-color: #000;
+    color: #fff;
+    margin-right: 5px;
     display: inline-block;
-    background: #f0f0f0;
-    padding: 5px;
-    margin: 2px;
     border-radius: 3px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.buttons a:hover, .buttons button:hover {
+    background-color: #333;
+    border-color: #333;
 }

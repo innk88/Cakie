@@ -1,80 +1,101 @@
+/* styles.css */
+
 body {
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 header {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid #000;
+    background: #f8f8f8;
+    border-bottom: 1px solid #e7e7e7;
+    padding: 10px 0;
+    text-align: center;
 }
 
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #333;
-}
-
-.logo img {
-    height: 50px;
-}
-
-.menu {
+header nav ul {
     list-style-type: none;
-    margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: flex-end;
-    flex-grow: 1;
-    font-size: 16px;
+    margin: 0;
+}
+
+header nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+header nav ul li a {
     text-decoration: none;
+    color: #000;
+    font-weight: bold;
 }
 
-.menu li {
-    margin-left: 20px;
+h1, h2 {
+    text-align: center;
 }
 
-.menu a {
-    color: white;
-    text-decoration: none;
-    padding: 10px 15px;
-    display: block;
-}
-
-.menu a:hover {
-    background-color: #575757;
-    border-radius: 5px;
-}
-.bestsellers {
-    margin: 20px;
-}
-
-.cake-list {
+.cakes-list {
     display: flex;
-    justify-content: space-around;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px 0;
 }
 
 .cake-item {
     border: 1px solid #ccc;
     padding: 10px;
-    width: 200px;
+    margin: 10px;
+    width: 400px;
     text-align: center;
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
 }
 
 .cake-item img {
     max-width: 100%;
     height: auto;
+    background: #D9534F; /* Placeholder background color */
 }
 
-.tags {
+.cake-item h3 {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.cake-item p {
+    margin: 5px 0;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.cake-item .tags {
+    margin: 10px 0;
+}
+
+.cake-item .tags .tag {
+    background-color: #eee;
+    border-radius: 3px;
+    padding: 2px 5px;
+    margin: 2px;
+    display: inline-block;
+}
+
+.buttons {
     margin-top: 10px;
 }
 
-.tag {
+.buttons a, .buttons button {
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid #000;
+    background-color: #000;
+    color: #fff;
+    margin-right: 5px;
     display: inline-block;
-    background: #f0f0f0;
-    padding: 5px;
-    margin: 2px;
     border-radius: 3px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.buttons a:hover, .buttons button:hover {
+    background-color: #333;
+    border-color: #333;
 }

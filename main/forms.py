@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Chief, Cake, Person, Order
+from .models import Chief, Cake, Person, Order, Category
 
 
 class PersonRegistrationForm(UserCreationForm):
@@ -24,15 +24,20 @@ class ChiefRegistrationForm(UserCreationForm):
 
 
 class CakeForm(forms.ModelForm):
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True, label="Категория")
+
     class Meta:
         model = Cake
-        fields = ['name', 'filling', 'price', 'weight', 'description', 'image', 'tags']
+        fields = ['name', 'filling', 'price', 'weight', 'description', 'image', 'category']
+        widgets = {
+            'tags': forms.CheckboxSelectMultiple(attrs={'id': 'tags'}),
+        }
 
 
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['count', 'description', 'design', 'due_date', 'image', 'chief', 'product']
+        fields = ['count', 'description', 'design', 'due_date', 'image']
         widgets = {
             'due_date': forms.DateInput(attrs={'type': 'date'}),
         }

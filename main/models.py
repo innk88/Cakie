@@ -29,7 +29,7 @@ class Cake(models.Model):
     name = models.CharField("Наименование", max_length=100)
     filling = models.CharField("Начинка", max_length=100)
     price = models.DecimalField("Цена", max_digits=10, decimal_places=2)
-    weight = models.DecimalField("Вес", max_digits=10, decimal_places=2)
+    weight = models.DecimalField("Вес в кг", max_digits=10, decimal_places=2)
     description = models.TextField("Описание")
     image = models.ImageField("Изображение", upload_to='static/main/media/cakes/', blank=True, null=True)
     tags = models.ManyToManyField('Tag', verbose_name="Теги", related_name="cakes")

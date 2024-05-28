@@ -52,3 +52,20 @@ def check_if_chief(view_func):
                 request.is_chief = False
         return view_func(request, *args, **kwargs)
     return _wrapped_view
+
+
+def get_real_chief(view_func):
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise PermissionDenied
+        if isinstance(request.user, Chief):
+            request.real_chief = request.user
+        else:
+            try:
+                real_chief = Chief.objects.get(pk=request.user.pk)
+                request.real_chief = real_chief
+            except Chief.DoesNotExist:
+                raise PermissionDenied
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view

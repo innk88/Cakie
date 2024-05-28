@@ -7,7 +7,39 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
+        <div id="tags-container">
+            {% for tag in tags %}
+                <div class="tag-checkbox" data-category="{{ tag.category.id }}">
+                    <label for="id_tags_{{ forloop.counter0 }}">
+                        <input type="checkbox" name="tags" value="{{ tag.id }}" id="id_tags_{{ forloop.counter0 }}">
+                        {{ tag.name }}
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
         <button type="submit">Add Cake</button>
     </form>
 </body>
+ <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categorySelect = document.getElementById('id_category');
+            const tagsCheckboxes = document.querySelectorAll('.tag-checkbox');
+            const tagsContainer = document.getElementById('tags-container');
+
+            function updateTags() {
+                const selectedCategory = categorySelect.value;
+                tagsCheckboxes.forEach(function(checkbox) {
+                    if (checkbox.dataset.category === selectedCategory) {
+                        checkbox.style.display = 'block';
+                    } else {
+                        checkbox.style.display = 'none';
+                        checkbox.querySelector('input').checked = false;
+                    }
+                });
+            }
+
+            categorySelect.addEventListener('change', updateTags);
+            updateTags();
+        });
+    </script>
 </html>

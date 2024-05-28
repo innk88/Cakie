@@ -1,30 +1,8 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Главная страница</title>
-    <link rel="stylesheet" href="{% static 'main/styles/css/index.css' %}">
-</head>
-<body>
-    <header>
-        <h1>CAKES</h1>
-        <nav>
-            <ul>
-                  {% if user.is_authenticated %}
-                    <li><a href="{% url 'profile' %}">Профиль</a></li>
-                    <li><a href="{% url 'logout' %}">Выйти</a></li>
-                {% else %}
-                    <li><a href="{% url 'login' %}">Войти</a></li>
-                    <li><a href="{% url 'register' %}">Регистрация</a></li>
-                    <li><a href="{% url 'register_chief' %}">Регистрация Кондитера</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    </header>
+{% extends 'main/base.html' %}
 
-    <main>
+{% block title %}Home{% endblock %}
+
+{% block content %}
         <section class="bestsellers">
             <h2>Бестселлеры</h2>
             <div class="cake-list">
@@ -32,18 +10,42 @@
                 <div class="cake-item">
                     <img src="{{ cake.image.url }}" alt="{{ cake.name }}">
                     <h3>{{ cake.name }}</h3>
+                    <p>@ <a href="{% url 'user_profile' cake.chief.id %}">{{ cake.chief.username }}</a></p>
                     <p>{{ cake.description }}</p>
-                    <p>{{ cake.price }} руб/кг</p>
-                    <p>@{{ cake.chief.username }}</p>
+                    <p>{{ cake.price }} руб - вес {{ cake.weight }} кг</p>
                     <div class="tags">
                         {% for tag in cake.tags.all %}
                         <span class="tag">#{{ tag.name }}</span>
                         {% endfor %}
                     </div>
+                 <div class="buttons">
+                    <a href="{% url 'order_cake' cake.id %}">Заказать</a>
+                    <a href="{% url 'view_cake' cake.id %}">Посмотреть</a>
+                 </div>
+
+                </div>
+                {% endfor %}
+            </div>
+            <h2>Все торты</h2>
+        <div class="cake-list">
+                {% for cake in all_cakes %}
+                <div class="cake-item">
+                    <img src="{{ cake.image.url }}" alt="{{ cake.name }}">
+                    <h3>{{ cake.name }}</h3>
+                    <p>@ <a href="{% url 'user_profile' cake.chief.id %}">{{ cake.chief.username }}</a></p>
+                    <p>{{ cake.description }}</p>
+                    <p>{{ cake.price }} руб - вес {{ cake.weight }} кг</p>
+                    <div class="tags">
+                        {% for tag in cake.tags.all %}
+                        <span class="tag">#{{ tag.name }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="buttons">
+                        <a href="{% url 'order_cake' cake.id %}">Заказать</a>
+                        <a href="{% url 'view_cake' cake.id %}">Посмотреть</a>
+                     </div>
                 </div>
                 {% endfor %}
             </div>
         </section>
-    </main>
-</body>
-</html>
+{% endblock %}

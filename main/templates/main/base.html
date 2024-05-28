@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+    <link rel="stylesheet" href="{% static 'main/styles/css/index.css' %}">
+</head>
+<body>
+    <header>
+        <h1>CAKES</h1>
+        <nav>
+            <ul>
+                  {% if user.is_authenticated %}
+                    <li><a href="{% url 'my_profile' %}">Профиль</a></li>
+                    <li><a href="{% url 'logout' %}">Выйти</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Войти</a></li>
+                    <li><a href="{% url 'register' %}">Регистрация</a></li>
+                    <li><a href="{% url 'register_chief' %}">Регистрация Кондитера</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+<main>
+        {% block content %}
+
+        {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2024 Cakes</p>
+    </footer>
+</body>
+</html>
