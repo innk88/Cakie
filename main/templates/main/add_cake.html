@@ -6,7 +6,39 @@
     <h2>Add a New Cake</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form.non_field_errors }}
+    <div>
+            {{ form.name.label_tag }}<br>
+            {{ form.name }}
+        </div>
+        <div>
+            {{ form.filling.label_tag }}<br>
+            {{ form.filling }}
+        </div>
+        <div>
+            {{ form.price.label_tag }}<br>
+            {{ form.price }}
+        </div>
+        <div>
+            {{ form.weight.label_tag }}<br>
+            {{ form.weight }}
+        </div>
+        <div>
+            {{ form.description.label_tag }}<br>
+            {{ form.description }}
+        </div>
+        <div>
+            {{ form.image.label_tag }}<br>
+            {{ form.image }}
+        </div>
+        <div id="selected-tags">
+            <h3>Выбранные теги</h3>
+            <div id="selected-tags-list"></div>
+        </div>
+        <div>
+            <label for="id_category">Категория:</label>
+            {{ form.category }}
+        </div>
         <div id="tags-container">
             {% for tag in tags %}
                 <div class="tag-checkbox" data-category="{{ tag.category.id }}">
@@ -20,26 +52,42 @@
         <button type="submit">Add Cake</button>
     </form>
 </body>
- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const categorySelect = document.getElementById('id_category');
-            const tagsCheckboxes = document.querySelectorAll('.tag-checkbox');
-            const tagsContainer = document.getElementById('tags-container');
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const categorySelect = document.getElementById('id_category');
+        const tagsCheckboxes = document.querySelectorAll('.tag-checkbox');
+        const tagsContainer = document.getElementById('tags-container');
+        const selectedTagsList = document.getElementById('selected-tags-list');
 
-            function updateTags() {
-                const selectedCategory = categorySelect.value;
-                tagsCheckboxes.forEach(function(checkbox) {
-                    if (checkbox.dataset.category === selectedCategory) {
-                        checkbox.style.display = 'block';
-                    } else {
-                        checkbox.style.display = 'none';
-                        checkbox.querySelector('input').checked = false;
-                    }
-                });
-            }
+        function updateTags() {
+            const selectedCategory = categorySelect.value;
+            tagsCheckboxes.forEach(function(checkbox) {
+                if (checkbox.dataset.category === selectedCategory) {
+                    checkbox.style.display = 'block';
+                } else {
+                    checkbox.style.display = 'none';
+                }
+            });
+        }
 
-            categorySelect.addEventListener('change', updateTags);
-            updateTags();
-        });
-    </script>
+        function updateSelectedTags() {
+            selectedTagsList.innerHTML = '';
+            tagsCheckboxes.forEach(function(checkbox) {
+                const input = checkbox.querySelector('input');
+                if (input.checked) {
+                    const tagLabel = document.createElement('span');
+                    tagLabel.textContent = `#${checkbox.textContent.trim()} `;
+                    tagLabel.className = 'selected-tag';
+                    selectedTagsList.appendChild(tagLabel);
+                }
+            });
+        }
+
+        categorySelect.addEventListener('change', updateTags);
+        tagsContainer.addEventListener('change', updateSelectedTags);
+
+        updateTags();
+        updateSelectedTags();
+    });
+</script>
 </html>

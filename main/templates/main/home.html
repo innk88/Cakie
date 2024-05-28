@@ -10,7 +10,7 @@
                 <div class="cake-item">
                     <img src="{{ cake.image.url }}" alt="{{ cake.name }}">
                     <h3>{{ cake.name }}</h3>
-                    <p>@ <a href="{% url 'user_profile' cake.chief.id %}">{{ cake.chief.username }}</a></p>
+                    <p>@ <a href="{% url 'chief_detail' cake.chief.id %}">{{ cake.chief.username }}</a></p>
                     <p>{{ cake.description }}</p>
                     <p>{{ cake.price }} руб - вес {{ cake.weight }} кг</p>
                     <div class="tags">
@@ -19,20 +19,53 @@
                         {% endfor %}
                     </div>
                  <div class="buttons">
-                    <a href="{% url 'order_cake' cake.id %}">Заказать</a>
-                    <a href="{% url 'view_cake' cake.id %}">Посмотреть</a>
+                     {% if user.is_authenticated %}
+                        <a href="{% url 'order_cake' cake.id %}">Заказать</a>
+                     {% else %}
+                        <a href="{% url 'please_authorised'%}">Заказать</a>
+                     {% endif %}
+                     <a href="{% url 'view_cake' cake.id %}">Посмотреть</a>
                  </div>
 
                 </div>
                 {% endfor %}
             </div>
-            <h2>Все торты</h2>
+             <form method="get">
+        <div>
+            <label for="category">Категория:</label>
+            <select id="category" name="category">
+                <option value="">Все</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div id="tags-container" style="display: none;">
+            <h3>Теги:</h3>
+            <div class="tags-filter">
+                {% for tag in tags %}
+                    <div class="tag-checkbox" data-category="{{ tag.category.id }}" style="display: none;">
+                        <label>
+                            <input type="checkbox" name="tags" value="{{ tag.id }}">
+                            #{{ tag.name }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div id="selected-tags" style="display: none;">
+            <h3>Выбранные теги:</h3>
+            <div id="selected-tags-list"></div>
+        </div>
+        <button type="submit">Фильтр</button>
+    </form>
+
         <div class="cake-list">
                 {% for cake in all_cakes %}
                 <div class="cake-item">
                     <img src="{{ cake.image.url }}" alt="{{ cake.name }}">
                     <h3>{{ cake.name }}</h3>
-                    <p>@ <a href="{% url 'user_profile' cake.chief.id %}">{{ cake.chief.username }}</a></p>
+                    <p>@ <a href="{% url 'chief_detail' cake.chief.id %}">{{ cake.chief.username }}</a></p>
                     <p>{{ cake.description }}</p>
                     <p>{{ cake.price }} руб - вес {{ cake.weight }} кг</p>
                     <div class="tags">
@@ -41,11 +74,58 @@
                         {% endfor %}
                     </div>
                     <div class="buttons">
+                        {% if user.is_authenticated %}
                         <a href="{% url 'order_cake' cake.id %}">Заказать</a>
+                     {% else %}
+                        <a href="{% url 'please_authorised'%}">Заказать</a>
+                     {% endif %}
                         <a href="{% url 'view_cake' cake.id %}">Посмотреть</a>
                      </div>
                 </div>
                 {% endfor %}
             </div>
         </section>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const categorySelect = document.getElementById('category');
+        const tagsCheckboxes = document.querySelectorAll('.tag-checkbox');
+        const tagsContainer = document.getElementById('tags-container');
+        const selectedTagsList = document.getElementById('selected-tags-list');
+        const selectedTagsSection = document.getElementById('selected-tags');
+
+        function updateTags() {
+            const selectedCategory = categorySelect.value;
+            let hasTags = false;
+            tagsCheckboxes.forEach(function(checkbox) {
+                if (selectedCategory === "" || checkbox.dataset.category === selectedCategory) {
+                    checkbox.style.display = 'block';
+                    hasTags = true;
+                } else {
+                    checkbox.style.display = 'none';
+                }
+            });
+            tagsContainer.style.display = hasTags ? 'block' : 'none';
+        }
+
+        function updateSelectedTags() {
+            selectedTagsList.innerHTML = '';
+            tagsCheckboxes.forEach(function(checkbox) {
+                const input = checkbox.querySelector('input');
+                if (input.checked) {
+                    const tagLabel = document.createElement('span');
+                    tagLabel.textContent = `#${checkbox.textContent.trim()}`;
+                    tagLabel.className = 'selected-tag';
+                    selectedTagsList.appendChild(tagLabel);
+                }
+            });
+            selectedTagsSection.style.display = selectedTagsList.childElementCount > 0 ? 'block' : 'none';
+        }
+
+        categorySelect.addEventListener('change', updateTags);
+        document.querySelector('.tags-filter').addEventListener('change', updateSelectedTags);
+
+        updateTags();
+        updateSelectedTags();
+    });
+</script>
 {% endblock %}

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Cake, Chief, Person, Order, Category, Tag, User
+from .models import Cake, Chief, Person, Order, Category, Tag, User, Review
 
 
 @admin.register(Cake)
@@ -30,3 +30,4 @@ class OrderAdmin(admin.ModelAdmin):
 
 admin.site.register(Tag)
 admin.site.register(Category)
+admin.site.register(Review)

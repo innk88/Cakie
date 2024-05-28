@@ -3,18 +3,27 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+     <div class="buttons">
+        <a href="{% url 'edit_profile' %}" class="btn">Редактировать профиль</a>
+        <form method="post" action="{% url 'delete_profile' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn">Удалить профиль</button>
+        </form>
      {% if is_chief %}
         <a href="{% url 'add_cake' %}">Добавить торт</a>
          <p><strong>Лого:</strong></p>
-            <img src="{{ chief.logo.url }}" alt="{{ chief.username }} лого">
-         <p><strong>Имя:</strong> {{ chief.username }}</p>
+            <img src="{{ chief.logo.url }}" alt="{{ chief.username }} лого" style="width: 200px">
+         <p><strong>Логин:</strong> {{ chief.username }}</p>
+         <p><strong>Имя:</strong> {{ chief.first_name }}</p>
+         <p><strong>Фамилия:</strong> {{ chief.last_name }}</p>
         <p><strong>Email:</strong> {{ chief.email }}</p>
         <p><strong>Адрес:</strong> {{ chief.address }}</p>
         <p><strong>Номер телефона:</strong> {{ chief.number }}</p>
+         <p>{{ chief.information }}</p>
         <h2>Ваши торты</h2>
-            <div class="items-list">
+            <div class="cake-list">
             {% for cake in cakes %}
-            <div class="item">
+            <div class="cake-item">
                 <img src="{{ cake.image.url }}" alt="{{ cake.name }}">
                 <h3>{{ cake.name }}</h3>
                 <p>{{ cake.description }}</p>
@@ -25,36 +34,79 @@
                     <span class="tag">#{{ tag.name }}</span>
                     {% endfor %}
                 </div>
+            <div class="buttons">
+                <a href="{% url 'edit_cake' cake.id %}" class="btn">Редактировать</a>
+                    <form method="post" action="{% url 'delete_cake' cake.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">Удалить</button>
+                    </form>
             </div>
-                <h2>Ваши заказы</h2>
-        <div class="items-list">
+            </div>
+            {% endfor %}
+            </div>
+                <h2>У вас заказали</h2>
+                <div class="cake-list">
             {% for order in orders %}
-            <div class="item">
+            <div class="cake-item">
+            {% if order.image %}
+            <img src="{{ order.image.url }}" alt="{{ order.product.name }}">
+                {%endif%}
                 <h3>{{ order.product.name }}</h3>
                 <p>{{ order.description }}</p>
                 <p>Дизайн: {{ order.design }}</p>
                 <p>Срок заказа: {{ order.due_date }}</p>
-                <p>Клиент: <a href="{% url 'user_profile' order.client.id %}">{{ order.client.username }}</a></p>
+                 <p>Клиент: {% if order.client %}<a href="{% url 'user_profile' order.client.id %}">{{ order.client.username }}</a>{% else %}Пользователь удален{% endif %}</p>
             </div>
             {% endfor %}
         </div>
-            {% endfor %}
-        </div>
-    {% else %}
-         <a href="{% url 'add_order' %}">Добавить заказ</a>
-         <p><strong>Имя:</strong> {{ client.username }}</p>
-        <p><strong>Email:</strong> {{ client.email }}</p>
-        <p><strong>Адрес:</strong> {{ client.address }}</p>
-        <p><strong>Номер телефона:</strong> {{ client.number }}</p>
-        <h2>Ваши заказы</h2>
-        <div class="items-list">
-            {% for order in orders %}
-            <div class="item">
+         <h2>Вы заказали</h2>
+                <div class="cake-list">
+            {% for order in my_orders %}
+            <div class="cake-item">
+            {% if order.image %}
+            <img src="{{ order.image.url }}" alt="{{ order.product.name }}">
+                {%endif%}
                 <h3>{{ order.product.name }}</h3>
                 <p>{{ order.description }}</p>
                 <p>Дизайн: {{ order.design }}</p>
                 <p>Срок заказа: {{ order.due_date }}</p>
                 <p>Кондитер: <a href="{% url 'user_profile' order.chief.id %}">{{ order.chief.username }}</a></p>
+            <div class="buttons">
+                <a href="{% url 'edit_order' order.id %}" class="btn">Редактировать</a>
+                    <form method="post" action="{% url 'delete_order' order.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">Удалить</button>
+                    </form>
+            </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+         <p><strong>Имя:</strong> {{ client.username }}</p>
+         <p><strong>Имя:</strong> {{ client.first_name }}</p>
+         <p><strong>Фамилия:</strong> {{ client.last_name }}</p>
+        <p><strong>Email:</strong> {{ client.email }}</p>
+        <p><strong>Адрес:</strong> {{ client.address }}</p>
+        <p><strong>Номер телефона:</strong> {{ client.number }}</p>
+        <h2>Ваши заказы</h2>
+        <div class="cake-list">
+            {% for order in orders %}
+            <div class="cake-item">
+            {% if order.image %}
+            <img src="{{ order.image.url }}" alt="{{ order.product.name }}">
+                {%endif%}
+                <h3>{{ order.product.name }}</h3>
+                <p>{{ order.description }}</p>
+                <p>Дизайн: {{ order.design }}</p>
+                <p>Срок заказа: {{ order.due_date }}</p>
+                <p>Кондитер: <a href="{% url 'user_profile' order.chief.id %}">{{ order.chief.username }}</a></p>
+            <div class="buttons">
+                <a href="{% url 'edit_order' order.id %}" class="btn">Редактировать</a>
+                    <form method="post" action="{% url 'delete_order' order.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">Удалить</button>
+                    </form>
+            </div>
             </div>
             {% endfor %}
         </div>

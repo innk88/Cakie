@@ -12,6 +12,7 @@
         <h1>CAKES</h1>
         <nav>
             <ul>
+            <li><a href="{% url 'home' %}">Главная</a></li>
                   {% if user.is_authenticated %}
                     <li><a href="{% url 'my_profile' %}">Профиль</a></li>
                     <li><a href="{% url 'logout' %}">Выйти</a></li>

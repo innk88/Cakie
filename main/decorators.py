@@ -23,18 +23,18 @@ def check_user_permission(permission):
 
 
 def get_real_user(view_func):
-    @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
         if not request.user.is_authenticated:
             raise PermissionDenied
-        if isinstance(request.user, Person):
-            request.real_user = request.user
-        else:
-            try:
-                real_user = Person.objects.get(pk=request.user.pk)
-                request.real_user = real_user
-            except Person.DoesNotExist:
-                raise PermissionDenied
+        try:
+            request.real_user = Person.objects.get(pk=request.user.pk)
+            if hasattr(request.real_user, 'chief'):
+                request.is_chief = True
+                request.real_chief = request.real_user.chief
+            else:
+                request.is_chief = False
+        except Person.DoesNotExist:
+            raise PermissionDenied
         return view_func(request, *args, **kwargs)
     return _wrapped_view
 

@@ -3,48 +3,20 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-    <h1>{{ user.username }}'s Profile</h1>
+    <h2>Профиль {{ user.username }}</h2>
     <div class="profile-info">
-        <h2>User Information</h2>
-        <p><strong>Username:</strong> {{ user.username }}</p>
-        <p><strong>Email:</strong> {{ user.email }}</p>
-        <p><strong>Address:</strong> {{ user.address }}</p>
-        <p><strong>Phone Number:</strong> {{ user.number }}</p>
-        {% if is_chief and user.logo %}
+        {% if user.logo %}
             <p><strong>Logo:</strong></p>
-            <img src="{{ user.logo.url }}" alt="{{ user.username }} logo">
+            <img src="{{ user.logo.url }}" alt="{{ user.username }} logo" style="width: 200px">
+        {% endif %}
+        <p><strong>Логин:</strong> {{ user.username }}</p>
+        <p><strong>Имя:</strong> {{ user.first_name }}</p>
+        <p><strong>Фамилия:</strong> {{ user.last_name }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Адрес:</strong> {{ user.address }}</p>
+        <p><strong>Номер телефона:</strong> {{ user.number }}</p>
+        {% if user.is_chief and user.logo %}
+            <p>{{ user.information }}</p>
         {% endif %}
     </div>
-    {% if is_chief %}
-        <h2>{{ user.username }}'s Cakes</h2>
-        <div class="items-list">
-            {% for cake in cakes %}
-            <div class="item">
-                <img src="{{ cake.image.url }}" alt="{{ cake.name }}">
-                <h3>{{ cake.name }}</h3>
-                <p>{{ cake.description }}</p>
-                <p>{{ cake.price }} руб/кг</p>
-                <p>Orders: {{ cake.order_count }}</p>
-                <div class="tags">
-                    {% for tag in cake.tags.all %}
-                    <span class="tag">#{{ tag.name }}</span>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <h2>{{ user.username }}'s Orders</h2>
-        <div class="items-list">
-            {% for order in orders %}
-            <div class="item">
-                <h3>{{ order.product.name }}</h3>
-                <p>{{ order.description }}</p>
-                <p>Design: {{ order.design }}</p>
-                <p>Due date: {{ order.due_date }}</p>
-                <p>Chief: {{ order.chief.username }}</p>
-            </div>
-            {% endfor %}
-        </div>
-    {% endif %}
 {% endblock content %}

@@ -5,14 +5,7 @@
 
 {% block content %}
     <style>
-        .cake-item {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px;
-            display: inline-block;
-            width: 200px;
-            vertical-align: top;
-        }
+
         .cake-item img {
             max-width: 100%;
             height: auto;
@@ -41,8 +34,80 @@
             background-color: #333;
             border-color: #333;
         }
+       .reviews {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .review-card {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        width: calc(33.333% - 20px);
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .review-author {
+        font-weight: bold;
+    }
+
+    .review-rating {
+        background-color: #f5c518;
+        border-radius: 3px;
+        padding: 2px 5px;
+    }
+
+    .review-date {
+        color: #777;
+        font-size: 0.9em;
+    }
+
+    .review-comment {
+        margin-top: 10px;
+    }
+
+    .review-form {
+        margin-top: 20px;
+        border-top: 1px solid #ddd;
+        padding-top: 10px;
+    }
+
+    .review-form input, .review-form textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .submit-btn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .submit-btn:hover {
+        background-color: #45a049;
+        }
     </style>
-</head>
 <body>
         <img src="{{ cake.image.url }}" alt="{{ cake.name }}">
         <h3>{{ cake.name }}</h3>
@@ -50,13 +115,46 @@
         <p>{{ cake.price }} руб</p>
         <p>{{ cake.filling }}</p>
         <p>{{ cake.weight }} кг</p>
-        <p>@{{ cake.chief.username }}</p>
+        <p>@<a href="{% url 'chief_detail' cake.chief.id %}">{{ cake.chief.username }}</a></p>
         <p>{{ cake.order_count }}</p>
         <div class="tags">
             {% for tag in cake.tags.all %}
             <span class="tag">#{{ tag.name }}</span>
             {% endfor %}
         </div>
-        <a href="{% url 'order_cake' cake.id %}">Заказать</a>
+         <div class="buttons">
+        {% if user.is_authenticated %}
+                        <a href="{% url 'order_cake' cake.id %}">Заказать</a>
+                     {% else %}
+                        <a href="{% url 'please_authorised'%}">Заказать</a>
+                     {% endif %}
+         </div>
+    <h2>Отзывы</h2>
+    <div class="reviews">
+        {% for review in reviews %}
+        <div class="review-card">
+            <div class="review-header">
+                <span class="review-author">{{ review.user.username }}</span>
+                <span class="review-rating">Рейтинг: {{ review.rating }}</span>
+                <span class="review-date">{{ review.created_at|date:"d M Y" }}</span>
+            </div>
+            <p class="review-comment">{{ review.comment }}</p>
+            {% if review.image %}
+                <img src="{{ review.image.url }}" alt="Review image" class="review-image" style="width: 200px">
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <h2>Оставить отзыв</h2>
+    {% if user.is_authenticated %}
+    <form method="post" class="review-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="submit-btn">Оставить отзыв</button>
+    </form>
+    {% else %}
+    <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставить отзыв.</p>
+    {% endif %}
 </body>
 {% endblock content %}

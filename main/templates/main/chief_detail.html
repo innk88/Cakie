@@ -1,0 +1,46 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <h2>Профиль {{ chief.username }}</h2>
+    <div class="profile-info">
+        {% if user.logo %}
+            <p><strong>Logo:</strong></p>
+            <img src="{{ chief.logo.url }}" alt="{{ chief.username }} logo" style="width: 200px">
+        {% endif %}
+        <p><strong>Логин:</strong> {{ chief.username }}</p>
+        <p><strong>Имя:</strong> {{ chief.first_name }}</p>
+        <p><strong>Фамилия:</strong> {{ chief.last_name }}</p>
+        <p><strong>Email:</strong> {{ chief.email }}</p>
+        <p><strong>Адрес:</strong> {{ chief.address }}</p>
+        <p><strong>Номер телефона:</strong> {{ chief.number }}</p>
+        <p>{{ chief.information }}</p>
+    </div>
+        <h2>Торты</h2>
+        <div class="cake-list">
+            {% for cake in cakes %}
+            <div class="cake-item">
+                <img src="{{ cake.image.url }}" alt="{{ cake.name }}">
+                <h3>{{ cake.name }}</h3>
+                <p>{{ cake.description }}</p>
+                <p>{{ cake.price }} руб/кг</p>
+                <p>Orders: {{ cake.order_count }}</p>
+                <div class="tags">
+                    {% for tag in cake.tags.all %}
+                    <span class="tag">#{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+                <div class="buttons">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'order_cake' cake.id %}">Заказать</a>
+                     {% else %}
+                        <a href="{% url 'please_authorised'%}">Заказать</a>
+                     {% endif %}
+                        <a href="{% url 'view_cake' cake.id %}">Посмотреть</a>
+                     </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+{% endblock content %}

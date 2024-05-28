@@ -15,7 +15,8 @@ class Person(User):
 
 
 class Chief(Person):
-    logo = models.ImageField("Логотип", upload_to='chiefs/', blank=True, null=True)
+    logo = models.ImageField("Логотип", upload_to='media/chiefs/', blank=True, null=True)
+    information = models.TextField("Информация", null=True)
 
     class Meta:
         verbose_name = "Chief"
@@ -65,3 +66,19 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Review(models.Model):
+    cake = models.ForeignKey(Cake, related_name='reviews', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField("Рейтинг", choices=[(i, i) for i in range(1, 6)])
+    comment = models.TextField("Комментарий")
+    created_at = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField("Фото", upload_to='media/reviews/', blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Review"
+        verbose_name_plural = "Reviews"
+
+    def __str__(self):
+        return f'Отзыв на {self.cake.name} от {self.user.username}'
