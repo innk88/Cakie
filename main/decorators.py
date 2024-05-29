@@ -65,7 +65,9 @@ def get_real_chief(view_func):
             try:
                 real_chief = Chief.objects.get(pk=request.user.pk)
                 request.real_chief = real_chief
+                request.is_chief = True
             except Chief.DoesNotExist:
-                raise PermissionDenied
+                request.real_chief = None
+                request.is_chief = False
         return view_func(request, *args, **kwargs)
     return _wrapped_view

@@ -1,6 +1,6 @@
 from django.urls import path
 from main.views import OrderCakeView, ViewCakeView, UserProfileView, HomeView, please_authorised, EditCakeView, \
-    DeleteCakeView, EditOrderView, DeleteOrderView, EditProfileView, DeleteProfileView, ChiefDetailView
+    DeleteCakeView, EditOrderView, DeleteOrderView, EditProfileView, DeleteProfileView, ChiefDetailView, ChangeOrderStatusView
 from .views import Register, ChiefRegisterView, AddCakeView, MyProfileView, AddOrderView
 from django.contrib.auth import views as auth_views
 urlpatterns = [
@@ -23,4 +23,5 @@ urlpatterns = [
     path('delete_order/<int:pk>/', DeleteOrderView.as_view(), name='delete_order'),
     path('please_authorised/', please_authorised, name='please_authorised'),
     path('chief/<int:pk>/', ChiefDetailView.as_view(), name='chief_detail'),
+    path('order/<int:pk>/change_status/', ChangeOrderStatusView.as_view(), name='change_order_status'),
 ]

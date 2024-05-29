@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .models import Cake, Category, Tag, Chief, Order, Person
 from .forms import CakeForm, OrderForm, CakeFilterForm, CakeEditForm, OrderEditForm, ChiefEditForm, PersonEditForm, \
-    ReviewForm
+    ReviewForm, OrderStatusForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from .forms import PersonRegistrationForm, ChiefRegistrationForm
@@ -84,22 +84,34 @@ class ChiefRegisterView(View):
 class MyProfileView(View):
     def get(self, request):
         if request.is_chief:
-            orders = Order.objects.filter(chief=request.real_user)
-            my_orders = Order.objects.filter(client=request.real_user)
-            cakes = Cake.objects.filter(chief=request.real_user)
+            orders_pending = Order.objects.filter(chief=request.real_chief, status='pending')
+            orders_in_process = Order.objects.filter(chief=request.real_chief, status='in_process')
+            orders_completed = Order.objects.filter(chief=request.real_chief, status='completed')
+            my_orders_pending = Order.objects.filter(client=request.real_user, status='pending')
+            my_orders_in_process = Order.objects.filter(client=request.real_user, status='in_process')
+            my_orders_completed = Order.objects.filter(client=request.real_user, status='completed')
+            cakes = Cake.objects.filter(chief=request.real_chief)
             context = {
                 'is_chief': True,
                 'cakes': cakes,
                 'chief': request.real_chief,
-                'orders': orders,
-                'my_orders': my_orders
+                'orders_pending': orders_pending,
+                'orders_in_process': orders_in_process,
+                'orders_completed': orders_completed,
+                'my_orders_pending': my_orders_pending,
+                'my_orders_in_process': my_orders_in_process,
+                'my_orders_completed': my_orders_completed,
             }
             return render(request, 'main/my_profile.html', context)
         else:
-            orders = Order.objects.filter(client=request.real_user)
+            orders_pending = Order.objects.filter(client=request.real_user, status='pending')
+            orders_in_process = Order.objects.filter(client=request.real_user, status='in_process')
+            orders_completed = Order.objects.filter(client=request.real_user, status='completed')
             context = {
                 'is_chief': False,
-                'orders': orders,
+                'orders_pending': orders_pending,
+                'orders_in_process': orders_in_process,
+                'orders_completed': orders_completed,
                 'client': request.real_user
             }
             return render(request, 'main/my_profile.html', context)
@@ -220,7 +232,7 @@ def please_authorised(request):
     return render(request, 'main/please_authorised.html')
 
 
-@method_decorator([login_required, get_real_chief], name='dispatch')
+@method_decorator([login_required, get_real_chief, check_if_chief], name='dispatch')
 class EditCakeView(View):
     def get(self, request, pk):
         cake = get_object_or_404(Cake, pk=pk, chief=request.real_chief)
@@ -236,7 +248,7 @@ class EditCakeView(View):
         return render(request, 'main/edit_cake.html', {'form': form, 'cake': cake})
 
 
-@method_decorator([login_required, get_real_chief], name='dispatch')
+@method_decorator([login_required,check_if_chief, get_real_chief], name='dispatch')
 class DeleteCakeView(View):
     def post(self, request, pk):
         cake = get_object_or_404(Cake, pk=pk, chief=request.real_chief)
@@ -304,3 +316,19 @@ class ChiefDetailView(View):
             'chief': chief,
             'cakes': cakes
         })
+
+
+@method_decorator([login_required, get_real_user, get_real_chief,check_if_chief], name='dispatch')
+class ChangeOrderStatusView(View):
+    def get(self, request, pk):
+        order = get_object_or_404(Order, pk=pk, chief=request.real_chief)
+        form = OrderStatusForm(instance=order)
+        return render(request, 'main/change_order_status.html', {'form': form, 'order': order})
+
+    def post(self, request, pk):
+        order = get_object_or_404(Order, pk=pk, chief=request.real_chief)
+        form = OrderStatusForm(request.POST, instance=order)
+        if form.is_valid():
+            form.save()
+            return redirect('my_profile')
+        return render(request, 'main/change_order_status.html', {'form': form, 'order': order})

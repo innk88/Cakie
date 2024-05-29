@@ -80,3 +80,12 @@ class ChiefEditForm(forms.ModelForm):
     class Meta:
         model = Chief
         fields = ['username', 'first_name', 'last_name', 'email', 'address', 'number', 'logo']
+
+
+class OrderStatusForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['status']
+        widgets = {
+            'status': forms.Select(choices=Order.STATUS_CHOICES),
+        }

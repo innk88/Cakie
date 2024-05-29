@@ -42,6 +42,12 @@ class Cake(models.Model):
 
 
 class Order(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Ожидает'),
+        ('in_process', 'В процессе'),
+        ('completed', 'Завершен'),
+    ]
+
     count = models.PositiveIntegerField("Количество")
     description = models.TextField("Описание")
     design = models.CharField("Дизайн", max_length=100)
@@ -51,6 +57,7 @@ class Order(models.Model):
     chief = models.ForeignKey(Chief, verbose_name="Кондитер", related_name="chief_orders", db_index=True, on_delete=models.CASCADE)
     client = models.ForeignKey(Person, verbose_name="Клиент", related_name="client_orders", db_index=True, null=True, on_delete=models.SET_NULL)
     product = models.ForeignKey(Cake, verbose_name="Торт", db_index=True, null=True, on_delete=models.SET_NULL)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
 
 
 class Category(models.Model):

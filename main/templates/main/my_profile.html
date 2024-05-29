@@ -9,8 +9,9 @@
             {% csrf_token %}
             <button type="submit" class="btn">Удалить профиль</button>
         </form>
+     </div>
      {% if is_chief %}
-        <a href="{% url 'add_cake' %}">Добавить торт</a>
+
          <p><strong>Лого:</strong></p>
             <img src="{{ chief.logo.url }}" alt="{{ chief.username }} лого" style="width: 200px">
          <p><strong>Логин:</strong> {{ chief.username }}</p>
@@ -20,6 +21,9 @@
         <p><strong>Адрес:</strong> {{ chief.address }}</p>
         <p><strong>Номер телефона:</strong> {{ chief.number }}</p>
          <p>{{ chief.information }}</p>
+         <div class="buttons">
+        <a href="{% url 'add_cake' %}">Добавить торт</a>
+         </div>
         <h2>Ваши торты</h2>
             <div class="cake-list">
             {% for cake in cakes %}
@@ -28,7 +32,7 @@
                 <h3>{{ cake.name }}</h3>
                 <p>{{ cake.description }}</p>
                 <p>{{ cake.price }} руб</p>
-                <p>Заказы:: {{ cake.order_count }}</p>
+                <p>Заказы: {{ cake.order_count }}</p>
                 <div class="tags">
                     {% for tag in cake.tags.all %}
                     <span class="tag">#{{ tag.name }}</span>
@@ -44,40 +48,129 @@
             </div>
             {% endfor %}
             </div>
-                <h2>У вас заказали</h2>
-                <div class="cake-list">
-            {% for order in orders %}
+            <h2>У вас заказали</h2>
+
+        <h3>Ожидает</h3>
+        <div class="cake-list">
+            {% for order in orders_pending %}
             <div class="cake-item">
             {% if order.image %}
             <img src="{{ order.image.url }}" alt="{{ order.product.name }}">
                 {%endif%}
-                <h3>{{ order.product.name }}</h3>
-                <p>{{ order.description }}</p>
-                <p>Дизайн: {{ order.design }}</p>
-                <p>Срок заказа: {{ order.due_date }}</p>
-                 <p>Клиент: {% if order.client %}<a href="{% url 'user_profile' order.client.id %}">{{ order.client.username }}</a>{% else %}Пользователь удален{% endif %}</p>
-            </div>
-            {% endfor %}
-        </div>
-         <h2>Вы заказали</h2>
-                <div class="cake-list">
-            {% for order in my_orders %}
-            <div class="cake-item">
-            {% if order.image %}
-            <img src="{{ order.image.url }}" alt="{{ order.product.name }}">
-                {%endif%}
-                <h3>{{ order.product.name }}</h3>
-                <p>{{ order.description }}</p>
-                <p>Дизайн: {{ order.design }}</p>
-                <p>Срок заказа: {{ order.due_date }}</p>
-                <p>Кондитер: <a href="{% url 'user_profile' order.chief.id %}">{{ order.chief.username }}</a></p>
-            <div class="buttons">
-                <a href="{% url 'edit_order' order.id %}" class="btn">Редактировать</a>
+                <p><strong>Торт:</strong> {{ order.product.name }}</p>
+                <p><strong>Описание:</strong> {{ order.description }}</p>
+                <p><strong>Дизайн:</strong> {{ order.design }}</p>
+                <p><strong>Срок заказа:</strong> {{ order.due_date }}</p>
+                <p><strong>Статус:</strong> {{ order.get_status_display }}</p>
+                <div class="buttons">
+                    <a href="{% url 'change_order_status' order.id %}" class="btn">Изменить статус</a>
                     <form method="post" action="{% url 'delete_order' order.id %}" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn">Удалить</button>
                     </form>
+                </div>
             </div>
+            {% endfor %}
+        </div>
+
+        <h3>В процессе</h3>
+        <div class="cake-list">
+            {% for order in orders_in_process %}
+            <div class="cake-item">
+            {% if order.image %}
+            <img src="{{ order.image.url }}" alt="{{ order.product.name }}">
+                {%endif%}
+                <p><strong>Торт:</strong> {{ order.product.name }}</p>
+                <p><strong>Описание:</strong> {{ order.description }}</p>
+                <p><strong>Дизайн:</strong> {{ order.design }}</p>
+                <p><strong>Срок заказа:</strong> {{ order.due_date }}</p>
+                <p><strong>Статус:</strong> {{ order.get_status_display }}</p>
+                <div class="buttons">
+                    <a href="{% url 'change_order_status' order.id %}" class="btn">Изменить статус</a>
+                    <button class="btn" disabled>Удалить</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <h3>Завершен</h3>
+        <div class="cake-list">
+            {% for order in orders_completed %}
+            <div class="cake-item">
+            {% if order.image %}
+            <img src="{{ order.image.url }}" alt="{{ order.product.name }}">
+                {%endif%}
+                <p><strong>Торт:</strong> {{ order.product.name }}</p>
+                <p><strong>Описание:</strong> {{ order.description }}</p>
+                <p><strong>Дизайн:</strong> {{ order.design }}</p>
+                <p><strong>Срок заказа:</strong> {{ order.due_date }}</p>
+                <p><strong>Статус:</strong> {{ order.get_status_display }}</p>
+                <div class="buttons">
+                    <a href="{% url 'change_order_status' order.id %}" class="btn">Изменить статус</a>
+                    <button class="btn" disabled>Удалить</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <h2>Ваши заказы</h2>
+
+        <h3>Ожидает</h3>
+        <div class="cake-list">
+            {% for order in my_orders_pending %}
+            <div class="cake-item">
+            {% if order.image %}
+            <img src="{{ order.image.url }}" alt="{{ order.product.name }}">
+                {%endif%}
+                <p><strong>Торт:</strong> {{ order.product.name }}</p>
+                <p><strong>Описание:</strong> {{ order.description }}</p>
+                <p><strong>Дизайн:</strong> {{ order.design }}</p>
+                <p><strong>Срок заказа:</strong> {{ order.due_date }}</p>
+                <p><strong>Статус:</strong> {{ order.get_status_display }}</p>
+                <div class="buttons">
+                    <form method="post" action="{% url 'delete_order' order.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">Удалить</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <h3>В процессе</h3>
+        <div class="cake-list">
+            {% for order in my_orders_in_process %}
+            <div class="cake-item">
+            {% if order.image %}
+            <img src="{{ order.image.url }}" alt="{{ order.product.name }}">
+                {%endif%}
+                <p><strong>Товар:</strong> {{ order.product.name }}</p>
+                <p><strong>Описание:</strong> {{ order.description }}</p>
+                <p><strong>Дизайн:</strong> {{ order.design }}</p>
+                <p><strong>Срок заказа:</strong> {{ order.due_date }}</p>
+                <p><strong>Статус:</strong> {{ order.get_status_display }}</p>
+                <div class="buttons">
+                    <button class="btn" disabled>Удалить</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <h3>Завершен</h3>
+        <div class="cake-list">
+            {% for order in my_orders_completed %}
+            <div class="cake-item">
+            {% if order.image %}
+            <img src="{{ order.image.url }}" alt="{{ order.product.name }}">
+                {%endif%}
+                <p><strong>Товар:</strong> {{ order.product.name }}</p>
+                <p><strong>Описание:</strong> {{ order.description }}</p>
+                <p><strong>Дизайн:</strong> {{ order.design }}</p>
+                <p><strong>Срок заказа:</strong> {{ order.due_date }}</p>
+                <p><strong>Статус:</strong> {{ order.get_status_display }}</p>
+                <div class="buttons">
+                    <button class="btn" disabled>Удалить</button>
+                </div>
             </div>
             {% endfor %}
         </div>
@@ -89,24 +182,65 @@
         <p><strong>Адрес:</strong> {{ client.address }}</p>
         <p><strong>Номер телефона:</strong> {{ client.number }}</p>
         <h2>Ваши заказы</h2>
+        <h3>Ожидает</h3>
         <div class="cake-list">
-            {% for order in orders %}
+            {% for order in orders_pending %}
             <div class="cake-item">
             {% if order.image %}
             <img src="{{ order.image.url }}" alt="{{ order.product.name }}">
                 {%endif%}
-                <h3>{{ order.product.name }}</h3>
-                <p>{{ order.description }}</p>
-                <p>Дизайн: {{ order.design }}</p>
-                <p>Срок заказа: {{ order.due_date }}</p>
-                <p>Кондитер: <a href="{% url 'user_profile' order.chief.id %}">{{ order.chief.username }}</a></p>
-            <div class="buttons">
-                <a href="{% url 'edit_order' order.id %}" class="btn">Редактировать</a>
+                <p><strong>Торт:</strong> {{ order.product.name }}</p>
+                <p><strong>Описание:</strong> {{ order.description }}</p>
+                <p><strong>Дизайн:</strong> {{ order.design }}</p>
+                <p><strong>Срок заказа:</strong> {{ order.due_date }}</p>
+                <p><strong>Статус:</strong> {{ order.get_status_display }}</p>
+                <div class="buttons">
+                    <a href="{% url 'change_order_status' order.id %}" class="btn">Изменить статус</a>
                     <form method="post" action="{% url 'delete_order' order.id %}" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn">Удалить</button>
                     </form>
+                </div>
             </div>
+            {% endfor %}
+        </div>
+
+        <h3>В процессе</h3>
+        <div class="cake-list">
+            {% for order in orders_in_process %}
+            <div class="cake-item">
+            {% if order.image %}
+            <img src="{{ order.image.url }}" alt="{{ order.product.name }}">
+                {%endif%}
+                <p><strong>Торт:</strong> {{ order.product.name }}</p>
+                <p><strong>Описание:</strong> {{ order.description }}</p>
+                <p><strong>Дизайн:</strong> {{ order.design }}</p>
+                <p><strong>Срок заказа:</strong> {{ order.due_date }}</p>
+                <p><strong>Статус:</strong> {{ order.get_status_display }}</p>
+                <div class="buttons">
+                    <a href="{% url 'change_order_status' order.id %}" class="btn">Изменить статус</a>
+                    <button class="btn" disabled>Удалить</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <h3>Завершен</h3>
+        <div class="cake-list">
+            {% for order in orders_completed %}
+            <div class="cake-item">
+            {% if order.image %}
+            <img src="{{ order.image.url }}" alt="{{ order.product.name }}">
+                {%endif%}
+                <p><strong>Торт:</strong> {{ order.product.name }}</p>
+                <p><strong>Описание:</strong> {{ order.description }}</p>
+                <p><strong>Дизайн:</strong> {{ order.design }}</p>
+                <p><strong>Срок заказа:</strong> {{ order.due_date }}</p>
+                <p><strong>Статус:</strong> {{ order.get_status_display }}</p>
+                <div class="buttons">
+                    <a href="{% url 'change_order_status' order.id %}" class="btn">Изменить статус</a>
+                    <button class="btn" disabled>Удалить</button>
+                </div>
             </div>
             {% endfor %}
         </div>

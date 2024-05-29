@@ -70,7 +70,21 @@
         border-radius: 3px;
         padding: 2px 5px;
     }
-
+    .review-rating-1 {
+            background-color: #ff4c4c;
+    }
+        .review-rating-2 {
+            background-color: #ff8040;
+        }
+        .review-rating-3 {
+            background-color: #ffd740;
+        }
+        .review-rating-4 {
+            background-color: #b3e55e;
+        }
+        .review-rating-5 {
+            background-color: #4caf50;
+        }
     .review-date {
         color: #777;
         font-size: 0.9em;
@@ -109,6 +123,8 @@
         }
     </style>
 <body>
+<div class="cake-list">
+<div class="cake-item">
         <img src="{{ cake.image.url }}" alt="{{ cake.name }}">
         <h3>{{ cake.name }}</h3>
         <p>{{ cake.description }}</p>
@@ -129,13 +145,15 @@
                         <a href="{% url 'please_authorised'%}">Заказать</a>
                      {% endif %}
          </div>
+</div>
+</div>
     <h2>Отзывы</h2>
     <div class="reviews">
         {% for review in reviews %}
         <div class="review-card">
             <div class="review-header">
                 <span class="review-author">{{ review.user.username }}</span>
-                <span class="review-rating">Рейтинг: {{ review.rating }}</span>
+                <span class="review-rating review-rating-{{ review.rating }}">Рейтинг: {{ review.rating }}</span>
                 <span class="review-date">{{ review.created_at|date:"d M Y" }}</span>
             </div>
             <p class="review-comment">{{ review.comment }}</p>
